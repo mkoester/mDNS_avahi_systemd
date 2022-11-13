@@ -1,0 +1,11 @@
+[Unit]
+Description=Avahi mDNS: publish as subdomain
+After=avahi-daemon.service
+
+[Service]
+Type=simple
+ExecStart=/bin/bash -c "avahi-publish -R -a %I.`hostname -s`.local `ip -o route get to $(dig www.ietf.org a +short | tail -n 1) | sed -n 's/.*src \([0-9.]\+\).*/\1/p'`"
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

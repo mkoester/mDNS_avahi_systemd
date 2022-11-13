@@ -1,0 +1,11 @@
+[Unit]
+Description=Avahi mDNS: publish as host
+After=avahi-daemon.service
+
+[Service]
+Type=simple
+ExecStart=/bin/bash -c "avahi-publish -R -a %I.local `ip -o route get to $(dig www.ietf.org aaaa +short | tail -n 1) | sed -n 's/.*src \([0-9a-f:]\+\).*/\1/p'`"
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
